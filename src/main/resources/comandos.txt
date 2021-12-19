@@ -1,0 +1,50 @@
+//**Creando network
+
+docker network create javapractica2
+
+
+//**instalamos mongodb en docker
+
+docker pull mongo:4.2
+
+//***creamos el contenedor en el siguiente puerto
+docker run -d -p 27017:27017 --name=sociomongodb --network javapractica2 mongo:4.2
+
+//***Ingresamos el siguiente comando
+docker exec -it sociomongodb bash
+
+//** Ingresamso la palabra mongo
+mongo
+
+//** ingresamos el siguiente comando para crear la bd
+use sociodb
+
+sociomongodb.Socio.insert
+	(
+		{
+			"dni" : "73987433",
+			"nombre" : "xavier",
+            "apellidoPaterno" : "ambrocio ramirez",
+            "apellidoMaterno" : "ambrocio ramirez",
+            "correo" : "ambrocio ramirez",
+            "telefono" : "ambrocio ramirez",
+            "estado" : 1,
+            "tipoMembresia" : "GOLD"
+		}
+	)
+
+	;
+
+//Ejecutar para docker
+
+.\mvnw clean package -DskipTests
+
+docker build -t api-man-socios-mongodb-p2:v1 .
+docker build -t api-man-socios-mongodb-p3:v1 .
+docker build -t api-man-socios-mongodb-p4:v1 .
+
+docker run -p 8092:8092 --name api-man-socios-mongodb-p2 --network javapractica2 api-man-socios-mongodb-p2:v1
+
+docker run -p 8093:8093 --name api-man-socios-mongodb-p3 --network javapractica2 api-man-socios-mongodb-p3:v1
+
+docker run -p 8094:8094 --name api-man-socios-mongodb-p4 --network javapractica2 api-man-socios-mongodb-p4:v1
